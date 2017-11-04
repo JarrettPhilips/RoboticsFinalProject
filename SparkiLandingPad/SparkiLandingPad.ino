@@ -34,7 +34,7 @@ void setup(){
 }
 
 void loop(){
-  //State Machine
+  //State Machine (Depending on how we implement the sin path, we may not even need this)
   switch(state){
     case 1 : //Linear Path of Variable Speed
       sparki.motorRotate(MOTOR_RIGHT, DIR_CW,  rightMotorSpeed);
