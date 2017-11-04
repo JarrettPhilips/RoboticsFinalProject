@@ -1,6 +1,8 @@
 #include <Sparki.h>
 
 //Motor Variables
+int speed = 0;
+int percentageOfSpeed = 100;
 int rightMotorSpeed = 0;
 int leftMotorSpeed = 0;
 
@@ -12,16 +14,22 @@ int delayTime = 0;
 //State Variables
 int state = 1;
 int randomlyChooseState = 0; //1 true, 0 false
+int randomlyChooseStateVariables = 0;
 
 void setup(){
   if(randomlyChooseState){
     state = random(1, 4); //Randomly selects a state, unless overwritten
   }
   
-  if(state == 1){
-    int speed = random(1, 101);
+  if(randomlyChooseStateVariables){
+    speed = random(1, 101);
     rightMotorSpeed = speed;
     leftMotorSpeed = speed;
+  
+    if(state == 2){
+      percentageOfSpeed = random(25, 76);
+      leftMotorSpeed = percentageOfSpeed * speed;
+    }
   }
 }
 
@@ -32,7 +40,9 @@ void loop(){
       sparki.motorRotate(MOTOR_RIGHT, DIR_CW,  rightMotorSpeed);
       sparki.motorRotate(MOTOR_LEFT, DIR_CCW,  leftMotorSpeed);
       break;
-    case 2 : //Circular Path of Variable Speed
+    case 2 : //Circular Path of Variable Speed and Radius (will always go CCW)
+      sparki.motorRotate(MOTOR_RIGHT, DIR_CW,  rightMotorSpeed);
+      sparki.motorRotate(MOTOR_LEFT, DIR_CCW,  leftMotorSpeed);
       break;
     case 3 : //Sin Path of Variable Speed
       break;
