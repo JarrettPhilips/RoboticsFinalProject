@@ -10,6 +10,8 @@ int leftMotorSpeed = 0;
 int loopCycles = 0;
 int totalElapsedTime = 0;
 int delayTime = 0;
+float intervalMultiplier = 3.0;
+int adjustedLoopTime = round(100 * intervalMultiplier); //100ms * intervalMultiplier
 
 //State Variables
 int state = 1;
