@@ -15,10 +15,11 @@ int adjustedLoopTime = round(100 * intervalMultiplier); //100ms * intervalMultip
 
 //State Variables
 int state = 1;
-int randomlyChooseState = 0; //1 true, 0 false
-int randomlyChooseStateVariables = 0;
+int randomlyChooseState = 1; //1 true, 0 false
+int randomlyChooseStateVariables = 1;
 
 void setup(){
+  randomSeed(analogRead(0)); 
   if(randomlyChooseState){
     state = random(1, 4); //Randomly selects a state, unless overwritten
   }
@@ -33,6 +34,10 @@ void setup(){
       leftMotorSpeed = percentageOfSpeed * speed;
     }
   }
+  sparki.clearLCD();
+  sparki.println(state);
+  sparki.println(leftMotorSpeed, rightMotorSpeed);
+  sparki.updateLCD();
 }
 
 void loop(){
