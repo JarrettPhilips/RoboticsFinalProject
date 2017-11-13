@@ -1,6 +1,9 @@
 '''
 	Command Line Arguements:
 	>python OpenCV.py photoDirectory 
+	
+	Dependencies:
+	- Place OpenCV library in same directory as python file
 '''
 
 import opencvmaster as cv
