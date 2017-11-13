@@ -1,4 +1,4 @@
-# Lab 7 - Final Project Planning
+# Final Project
 **Anthony Keydel, Jarrett Philips, Max Schwarz**
 
 ## Abstract
