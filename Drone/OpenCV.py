@@ -51,3 +51,7 @@ paramCircle.minInertiaRatio = 0.75
 detectSquare = cv.SimpleBlobDetector(paramSquare)
 detectSquare = cv.SimpleBlobDetector(paramCircle)
 
+#Calculate Distance to Pad
+squareTrueSize = 17.78 #cm (7 inch)
+circleTrueSize = 7.62  #cm (3 inch)
+
