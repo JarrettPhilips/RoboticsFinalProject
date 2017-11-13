@@ -1,4 +1,6 @@
 '''
+	Drone OpenCV Code - Find landing pad and calculate drone's position in relation to it
+
 	Command Line Arguements:
 	>python OpenCV.py photoDirectory 
 	
