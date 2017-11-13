@@ -21,23 +21,15 @@ Drone will take off, look down, and find the landing pad using OpenCV. It will a
 
 ## Plan For Next Month (11/1 - 12/13)
 [ ] Create Sparki Pad - Lead: Jarrett | Deadline: November 8th
- 
  [ ] Create Sparki path program (Random State Machine)
-  
-  [ ] Variable Linear Path
-  
-  [ ] Variable Circular Path
-  
-  [ ] Variable Sin Path 
- 
+  [X] Variable Linear Path
+  [X] Variable Circular Path
+  [ ] Variable Sin Path
  [ ] Build physical pad to mount to Sparki
-  
   [ ] Pad will be colored bright green
-  
   [ ] Pad will have a center circle target colored bright red
- 
  [ ] Make sure Sparki can carry the weight of the pad
-
+ 
 [ ] Create Vision System - Lead: Anthony | Deadline: November 15th
  [ ] Install OpenCV Python Package & Verify it works with drone camera
  [ ] Write color threshold algorithm to locate pad
