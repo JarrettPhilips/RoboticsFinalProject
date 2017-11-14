@@ -62,3 +62,11 @@ Things we can remove:
 ## Demo
 Simple video demonstration.  Provide examples of each of Sparki’s possible paths. Demonstrate as the drone takes off, scans area, and lands on the pad. 
 
+##To Run
+For Linux:
+npm install ar-drone
+apt-get install -y nodejs
+connect to drone using wifi
+node <.js flight script>
+
+
