@@ -1,4 +1,6 @@
 '''
+	**Uses python3**
+
 	Drone OpenCV Code - Find landing pad and calculate drone's position in relation to it
 
 	Command Line Arguements:
@@ -12,6 +14,23 @@ import opencvmaster as cv
 import numpy as np
 import sys	
 
+
+########## Global Variables ##########
+#Landing Pad
+innerCircleTrueRadius = 2.54 #cm (1 inch)
+middleCircleTrueRadius = 7.62 #cm (3 inch)
+outerCircleTrueRadius = 15.24 #cm (6 inch)
+
+#Photo
+photoWidth = 640 #pixels
+photoHeight = 360
+photoWidthFromOneMeter = 187.1 #cm (the width of the rectangle that the drone's camera captures from 100 cm above the ground)
+photoHeightFromOneMeter = 101.2
+
+#Drone
+altitude = 0 #cm
+
+#####################################################
 
 photoDirectory = sys.argv[1]
 print("Running diagnostics on file:", photoDirectory)
@@ -53,7 +72,23 @@ def findPad(blobs):
 
 
 
-#Calculate Distance to Pad
-squareTrueSize = 17.78 #cm (7 inch)
-circleTrueSize = 7.62  #cm (3 inch)
+# Calculate Distance to Pad
+def calculatePadLocation(innerCirclePixelOriginX, innerCirclePixelOriginY): #Returns x,y coordinates of pad RELATIVE to drone (cm)
+	landingPadRelativeX = (innerCirclePixelOriginX / photoWidth) * (photoWidthFromOneMeter / 100) * (altitude)
+	landingPadRelativeY = (innerCirclePixelOriginY / photoHeight) * (photoHeightFromOneMeter / 100) * (altitude)
+
+	return landingPadRelativeX, landingPadRelativeY
+
+def convertPhotoCoordinates(x, y): #converts coordinates from a lop-left origin (aka photos) to a center origin
+	newX = x - (photoWidth / 2)
+	newY = y - (photoHeight / 2)
+	return newX, newY
+
+
+
+
+
+
+
+
 
