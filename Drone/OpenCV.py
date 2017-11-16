@@ -10,9 +10,9 @@
 	- Place OpenCV library in same directory as python file
 '''
 
-import opencvmaster as cv
 import numpy as np
 import sys	
+import cv2 as cv
 
 #####################################################
 '''				 	  Variables			  	      '''
@@ -32,25 +32,22 @@ photoHeightFromOneMeter = 101.2
 altitude = 0.0 #cm
 
 #####################################################
-'''				 Procedural / Main			  	  '''
-#####################################################
-
-photoDirectory = sys.argv[1]
-altitude = sys.argv[2]
-print("Running diagnostics on file:", photoDirectory)
-
-photoX, photoY = findPad(detectBlobs(photoDirectory))
-print("PhotoX:", photoX, "| PhotoY:", photoY)
-pixelX, pixelY = convertPhotoCoordinates(photoX, photoY)
-print("PixelX:", PixelX, "| PixelY:", pixelY)
-relativeX, relativeY = calculatePadLocation(pixelX, pixelY)
-print("RelativeX:", relativeX, "| RelativeY:", relativeY)
-
-return relativeX, relativeY
-
-#####################################################
 '''				 	  Functions			  	  	  '''
 #####################################################
+
+def getCoordinates(photoDirectory, altitude):
+	print("Running diagnostics on file:", photoDirectory)
+	print("Altitude:", altitude)
+
+	photoX, photoY = findPad(detectBlobs(photoDirectory))
+	print("PhotoX:", photoX, "| PhotoY:", photoY)
+	pixelX, pixelY = convertPhotoCoordinates(photoX, photoY)
+	print("PixelX:", pixelX, "| PixelY:", pixelY)
+	relativeX, relativeY = calculatePadLocation(pixelX, pixelY)
+	print("RelativeX:", relativeX, "| RelativeY:", relativeY)
+
+	return relativeX, relativeY
+
 def detectBlobs(path):
 	img = cv.imread(path)
 
@@ -65,41 +62,42 @@ def detectBlobs(path):
 	#paramCircle.minArea = 200
 	 
 	# Filter by Circularity
-	paramCircle.filterByCircularity = true
+	paramCircle.filterByCircularity = True
 	paramCircle.minCircularity = 0.90
 
 	# Filter by Inertia
-	paramCircle.filterByInertia = true
+	paramCircle.filterByInertia = True
 	paramCircle.minInertiaRatio = 0.75
 
 
 	# Create Detectors
-	detector1 = cv.SimpleBlobDetector(paramCircle)
+	detector1 = cv.SimpleBlobDetector_create(paramCircle)
 
-	blobs = detector.detect(img)
+	blobs = detector1.detect(img)
 	return blobs
 
 def findPad(blobs): #returns x, y coordinates (photo coordinates)
-	for i in blobs
+	#for i in blobs
 	# make a dictionary with the coordinates of blobs as the key
 	# and the key with 3 entries is the pad
+	print("Hello World")
+	return 0, 0
 
-def calculatePadLocation(innerCirclePixelOriginX, innerCirclePixelOriginY): #Returns x,y coordinates of pad RELATIVE to drone (cm)
+
+#Returns x,y coordinates of pad RELATIVE to drone (cm)
+def calculatePadLocation(innerCirclePixelOriginX, innerCirclePixelOriginY): 
 	landingPadRelativeX = (innerCirclePixelOriginX / photoWidth) * (photoWidthFromOneMeter / 100) * (altitude)
 	landingPadRelativeY = (innerCirclePixelOriginY / photoHeight) * (photoHeightFromOneMeter / 100) * (altitude)
-
 	return landingPadRelativeX, landingPadRelativeY
 
-def convertPhotoCoordinates(x, y): #converts coordinates from a lop-left origin (aka photos) to a center origin
+#Converts coordinates from a lop-left origin (aka photos) to a center origin
+def convertPhotoCoordinates(x, y): 
 	newX = x - (photoWidth / 2)
 	newY = y - (photoHeight / 2)
 	return newX, newY
 
+#####################################################
+'''				 Procedural / Main			  	  '''
+#####################################################
 
-
-
-
-
-
-
-
+getCoordinates("photo.jpg", 30)

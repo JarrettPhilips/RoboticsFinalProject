@@ -2,11 +2,11 @@
 testing blob detection 
 '''
 
-import opencvmaster as cv
+import cv2 as cv
 import numpy as np
 import sys	
 
-img = cv.imread(LandingPadCircles.png)
+img = cv.imread("LandingPadCircles.png")
 
 paramCircle = cv.SimpleBlobDetector_Params()
 
@@ -19,17 +19,17 @@ paramCircle.maxThreshold = 200
 #paramCircle.minArea = 200
  
 # Filter by Circularity
-paramCircle.filterByCircularity = true
+paramCircle.filterByCircularity = True
 paramCircle.minCircularity = 0.90
 
 # Filter by Inertia
-paramCircle.filterByInertia = true
+paramCircle.filterByInertia = True
 paramCircle.minInertiaRatio = 0.75
 
 
 # Create Detectors
-detector1 = cv.SimpleBlobDetector(paramCircle)
+detector1 = cv.SimpleBlobDetector_create(paramCircle)
 
-blobs = detector.detect(im)
+blobs = detector1.detect(img)
 for blob in blobs:
 	print(blob)
