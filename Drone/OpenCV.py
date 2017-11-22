@@ -48,8 +48,16 @@ def getCoordinates(photoDirectory, altitude):
 
 	return relativeX, relativeY
 
-def detectBlobs(path):
+def processImg(path):
 	img = cv.imread(path)
+	img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+	img = cv.GaussianBlur(img, (5, 5), 0)
+	img = cv.Canny(img, 75, 200)
+	cv.imshow("test", img)
+	cv.waitKey(0)
+
+
+def detectBlobs(img):
 
 	paramCircle = cv.SimpleBlobDetector_Params()
 
@@ -66,14 +74,19 @@ def detectBlobs(path):
 	paramCircle.minCircularity = 0.90
 
 	# Filter by Inertia
-	paramCircle.filterByInertia = True
-	paramCircle.minInertiaRatio = 0.75
+	#paramCircle.filterByInertia = True
+	#paramCircle.minInertiaRatio = 0.75
 
 
 	# Create Detectors
 	detector1 = cv.SimpleBlobDetector_create(paramCircle)
 
 	blobs = detector1.detect(img)
+
+	imgTest = cv.imread("test.jpg")
+	blobTest = detector1.detect(imgTest)
+	print(blobTest)
+
 	return blobs
 
 def findPad(blobs): #returns x, y coordinates (photo coordinates)
@@ -100,4 +113,5 @@ def convertPhotoCoordinates(x, y):
 '''				 Procedural / Main			  	  '''
 #####################################################
 
-getCoordinates("photo.jpg", 30)
+#getCoordinates("photo.jpg", 30)
+processImg("../landing_pad.png")
