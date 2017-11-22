@@ -3,7 +3,7 @@
 
 	Drone OpenCV Code - Find landing pad and calculate drone's position in relation to it
 
-	Command Line Arguements:
+	Command Line Arguements (if enabled):
 	>python OpenCV.py photoDirectory, altitude (cm)
 	
 	Dependencies:
@@ -11,12 +11,15 @@
 '''
 
 import numpy as np
-import sys	
+import sys
 import cv2 as cv
 
 #####################################################
 '''				 	  Variables			  	      '''
 #####################################################
+#Runtime
+commandLineArguementsEnabled = True
+
 #Landing Pad
 innerCircleTrueRadius = 2.54 #cm (1 inch)
 middleCircleTrueRadius = 7.62 #cm (3 inch)
@@ -77,12 +80,10 @@ def detectBlobs(path):
 	return blobs
 
 def findPad(blobs): #returns x, y coordinates (photo coordinates)
-	#for i in blobs
+	# for i in blobs
 	# make a dictionary with the coordinates of blobs as the key
 	# and the key with 3 entries is the pad
-	print("Hello World")
 	return 0, 0
-
 
 #Returns x,y coordinates of pad RELATIVE to drone (cm)
 def calculatePadLocation(innerCirclePixelOriginX, innerCirclePixelOriginY): 
@@ -99,5 +100,5 @@ def convertPhotoCoordinates(x, y):
 #####################################################
 '''				 Procedural / Main			  	  '''
 #####################################################
-
-getCoordinates("photo.jpg", 30)
+if commandLineArguementsEnabled :
+	getCoordinates(sys.argv[1], sys.argv[2])
