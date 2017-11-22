@@ -1,4 +1,6 @@
 '''
+	OLD CODE. Please use / modify "DroneCV.py"
+	
 	**Uses python3**
 
 	Drone OpenCV Code - Find landing pad and calculate drone's position in relation to it
