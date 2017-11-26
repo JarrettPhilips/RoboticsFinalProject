@@ -30,9 +30,9 @@ Drone will take off, look down, and find the landing pad using OpenCV. It will a
   [ ] Pad will have a center circle target colored bright red
  [ ] Make sure Sparki can carry the weight of the pad
  
-[ ] Create Vision System - Lead: Anthony | Deadline: November 15th
- [ ] Install OpenCV Python Package & Verify it works with drone camera
- [ ] Write color threshold algorithm to locate pad
+[X] Create Vision System - Lead: Anthony | Deadline: November 15th
+ [X] Install OpenCV Python Package & Verify it works with drone camera
+ [X] Write color threshold algorithm to locate pad
 
 [ ] Drone Basic Systems - Lead: Max | Deadline: November 29th (Spans Fall Break)
  [ ] Be able to take off
