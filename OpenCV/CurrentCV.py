@@ -18,15 +18,27 @@ photoHeightFromOneMeter = 113.5
 altitude = 100.0 #cm
 
 ###################################
-# Functions
+# Helping Functions
 ###################################
+def insertionSort(array):
+	for index in range(1, len(array)):
+		 currentvalue = array[index]
+		 position = index
+
+		 while position > 0 and array[position - 1] > currentvalue:
+		     array[position] = array[position - 1]
+		     position = position - 1
+
+		 array[position] = currentvalue
+	return array
+
 #Find largest contour
 def findLargestContour(contours):
 	largestContourArea = 0.0
 	largestContour = 0
 
 	for x in contours :
-		area = cv. contourArea(x)
+		area = cv.contourArea(x)
 		if area > largestContourArea :
 			largestContourArea = area
 			largestContour = x
@@ -44,6 +56,11 @@ def findCenterOfContour(contour):
 	print "== Center of pad identified as =="
 	print "Top-Left Origin X:", cx, "| Top-Left Origin Y:", cy
 	return cx, cy
+
+def areAreasSimilar(area1, area2):
+	if (area1 / area2) > .9 and (area1 / area2) < 1.1 :
+		return True
+	return False
 
 #Converts coordinates from a lop-left origin (aka photos) to a center origin
 def convertCoordinates(x, y):
@@ -64,20 +81,15 @@ def getLandingPadRelativePosition(x, y):
 #Calculates the desired direction of travel (Drone is facing 0 radians, + is CCW)
 def getHeadingAdjustment(x, y):
 	deltaTheta = math.atan2(y, x) - 1.57079632675
-	print "Adjust heading", deltaTheta * 180 / 3.1415926535, "degrees"
+	deltaTheta = deltaTheta * 180 / 3.1415926535 #Converts from radians to degrees
+	print "Adjust heading", deltaTheta, "degrees"
 	print "================================="
 	return deltaTheta
 
-###################################
-# Main
-###################################
-def main():
+def getContours(imageName):
 	#Read in image, manipulate to allow cv to work
 	print "Initializing"
-	initialImage = "photo.jpg"
-	if commandLineArguementsEnabled :
-		initialImage = cv.imread(sys.argv[1])
-	grayscaleImage = cv.cvtColor(initialImage, cv.COLOR_BGR2GRAY)
+	grayscaleImage = cv.cvtColor(imageName, cv.COLOR_BGR2GRAY)
 	ret, threshold = cv.threshold(grayscaleImage, 220, 255, 0) #image, lower bound, upper bound, no idea
 
 	#Find edges
@@ -85,23 +97,58 @@ def main():
 	im2, contours, hierarchy = cv.findContours(threshold, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
 	#print contours
 
-	cx, cy = findCenterOfContour(findLargestContour(contours))
-	x, y = convertCoordinates(cx, cy);
-	padX, padY = getLandingPadRelativePosition(x, y)
-	deltaTheta = getHeadingAdjustment(x, y)
+	return contours
 
+def createVisualOutput(imageName):
 	#Create an output image for visual aid
+	contours = getContours(imageName)
+	grayscaleImage = cv.cvtColor(imageName, cv.COLOR_BGR2GRAY)
+	cx, cy = findCenterOfContour(findLargestContour(contours))
+
 	print "Creating Visual Output"
 	outputImage = cv.cvtColor(grayscaleImage, cv.COLOR_GRAY2BGR)
-	cv.circle(outputImage, ((int)(photoWidth / 2), (int)(photoHeight / 2)), 10, (0, 255, 0), -1)
-	cv.circle(outputImage, (cx, cy), 10, (255, 0, 0), -1)
+	cv.circle(outputImage, ((int)(photoWidth / 2), (int)(photoHeight / 2)), 10, (0, 255, 0), -1) #Circle in center of image
+	cv.circle(outputImage, (cx, cy), 10, (255, 0, 0), -1) #Circle in center of pad
 	cv.drawContours(outputImage, contours, -1, (0,255,255), 4)
 	cv.imwrite('Output.jpg', outputImage)
 	cv.waitKey(0)
 	cv.destroyAllWindows()
 
+###################################
+# Main Call Functions
+###################################
+#Determines if the pad is visible, partially visible, or not visible in given image
+#Returns -1 for not visible, 0 for partially visible, 1 for fully visible
+def doesPadExist(imageName):
+	contours = getContours(imageName)
+	print "Searching for pad"
+
+	contourAreas = []
+	for i in range(len(contours)):
+		area = cv.contourArea(contours[i])
+		contourAreas.append(area)
+
+	contourAreasSorted = insertionSort(contourAreas)
+	contourAreasSorted.reverse()
+
+	#With the sorted array, determine if contours 2/3 are close to the same value
+	if areAreasSimilar(contourAreasSorted[1], contourAreasSorted[2]) :
+		print "Pad has been found"
+		return 1
+	else :
+		print "No pad found"
+		return -1
+
+def getCoordinatesOfCenterOfPad(imageName):
+	contours = getContours(imageName)
+	cx, cy = findCenterOfContour(findLargestContour(contours))
+	x, y = convertCoordinates(cx, cy);
+	padX, padY = getLandingPadRelativePosition(x, y)
+	deltaTheta = getHeadingAdjustment(x, y)
 	return padX, padY, deltaTheta
 
 #Calls main in event of running program from command line
-commandLineArguementsEnabled = True
-main()
+imageName = cv.imread(sys.argv[1])
+print doesPadExist(imageName)
+print getCoordinatesOfCenterOfPad(imageName)
+createVisualOutput(imageName)
