@@ -666,6 +666,9 @@ void BebopDriverNodelet::AuxThread()
         gps_msg.latitude = gps_state_ptr->latitude;
         gps_msg.longitude = gps_state_ptr->longitude;
         gps_msg.altitude = gps_state_ptr->altitude;
+
+	NODELET_INFO("=================ALTITUDE================ %f", gps_msg.altitude);
+
         gps_fix_pub_.publish(gps_msg);
         new_gps_state = false;
       }
