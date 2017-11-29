@@ -1,5 +1,5 @@
 # To Do List #
-Please just put whatever needs to be done here. Then people can claim an issue and we can hopefully get things wrapped up soon.
+Please just put whatever needs to be done (or fixed) here. Then people can claim an issue and we can hopefully get things wrapped up soon.
 
 ### Drone ###
 
