@@ -14,20 +14,24 @@ Depending on the desired environment, variables can be adjusted to accomadate di
 
 ### Running ###
 This Program can be called from either command line or just a function call. 
+
 Image name is a string of the directory of the image. If they are in the same directory, this is just the image name. Please include the file type (e.g. ".jpg" or ".png")
+
 The true or false value is just whether you want the program to generate a visual output of it's work. It's really helpful for debugging, but doesn't affect the program otherwise.
+  
   Command line: '>python2 FindPad.py Imagename.png True/False'
+  
   Function call: 'findPad(imageName, True/False)'
 
 ### Returned Values ###
 Returns: 'return code, X-Coord of first possible landing pad center, Y-Coord of first possible landing pad center, List of all possible landing pad centers'
+
 All returned values are integers.
 
-Return Code Key
-===============
-'-1'	| Error
-'0'	  | No Pads Found
-'1'	  | Single Primary Pad Found
-'2'	  | Single Secondary Pad Found
-'11'	| Multiple Primary Pads Found
-'12'	| Multiple Secondary Pads Found	
+###### Return Code Key ######
+| '-1'	| Error                           |
+| '0'	  | No Pads Found                   |
+| '1'	  | Single Primary Pad Found        |
+| '2'	  | Single Secondary Pad Found      |
+| '11'	| Multiple Primary Pads Found     |
+| '12'	| Multiple Secondary Pads Found	  |
