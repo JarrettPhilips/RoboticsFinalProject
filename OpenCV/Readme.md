@@ -19,9 +19,9 @@ Image name is a string of the directory of the image. If they are in the same di
 
 The true or false value is just whether you want the program to generate a visual output of it's work. It's really helpful for debugging, but doesn't affect the program otherwise.
   
-  Command line: '>python2 FindPad.py Imagename.png True/False' 
+  Command line: `>python2 FindPad.py Imagename.png True/False`
   
-  Function call: 'findPad(imageName, True/False)'
+  Function call: `findPad(imageName, True/False)`
 
 ### Returned Values ###
 Returns: 'return code, X-Coord of first possible landing pad center, Y-Coord of first possible landing pad center, List of all possible landing pad centers'
