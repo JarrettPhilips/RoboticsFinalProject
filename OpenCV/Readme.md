@@ -24,7 +24,9 @@ The true or false value is just whether you want the program to generate a visua
   Function call: `findPad(imageName, True/False)`
 
 ### Returned Values ###
-Returns: 'return code, X-Coord of first possible landing pad center, Y-Coord of first possible landing pad center, List of all possible landing pad centers'
+Returns: `return code, X-Coord of first possible landing pad center, Y-Coord of first possible landing pad center, List of all possible landing pad centers`
+
+If multiple pads are found, it will first return the largest potential pad, then the entire array of possible pads. This will  be marked in the return code.
 
 All returned values are integers.
 
