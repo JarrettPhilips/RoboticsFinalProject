@@ -31,9 +31,9 @@ All returned values are integers.
 ##### Return Code Key #####
 | Code  | Meaning                         |
 |-------|:--------------------------------|
-| '-1'	| Error                           |
-| '0'	  | No Pads Found                   |
-| '1'	  | Single Primary Pad Found        |
-| '2'	  | Single Secondary Pad Found      |
-| '11'	| Multiple Primary Pads Found     |
-| '12'	| Multiple Secondary Pads Found	  |
+| `-1`	| Error                           |
+| `0`	  | No Pads Found                   |
+| `1`	  | Single Primary Pad Found        |
+| `2`   | Single Secondary Pad Found      |
+| `11`	| Multiple Primary Pads Found     |
+| `12`	| Multiple Secondary Pads Found	  |
