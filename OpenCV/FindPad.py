@@ -1,10 +1,22 @@
 '''
-	Given a photo, analyzes contours to determine if the landing pad is in the image, and if so, gets it's location (in the photo)
-	
+	Abstract: Given a photo, analyzes contours to determine if the landing pad is in the image
 	Dependencies: OpenCV 2 needs to be installed, written for Python 2.7
+	
+	Variable Adjustments: Depending on the desired environment, variables can be adjusted to accomadate different pads, accuracies, and environmental factors
+	There are a lot of commented out print statements. Please do not remove them, they are SUPER useful.
+	V4 is the new dark pad version (can be found on the repo). 
+	V5 is a failed experiment, but comments with it's values have been left in just in case. Just ignore them for now
+	
+	Calling: This Program can be called from either command line or just a function call.
+	Image name is a string of the directory of the image. If they are in the same directory, this is just the image name.
+	Please include the file type (e.g. ".jpg" or ".png")
+	The true or false value is just whether you want the program to generate a visual output of it's work.
+	It's really helpful for debugging, but doesn't affect the program otherwise.
+		Command line: >python2 FindPad.py Imagename.png True/False
+		Function call: findPad(imageName, True/False)
 
-	Depending on the desired environment, variables can be adjusted to accomadate different pads, accuracies, and environmental factors
-	There are a lot of commented out print statements. Please do not remove them, they are SUPER useful
+	Returns: return code, X-Coord of first possible landing pad center, Y-Coord of first possible landing pad center, List of all possible landing pad centers
+	*All returned values are integers
 
 	Return Code Key
 	===============
@@ -26,17 +38,18 @@ import time
 #				Variables				#
 #########################################
 #Landing pad details
-outerRingAreaRatio = 1.745 #Default is 1.745
-innerRingAreaRatio = 1.339 #Default is 1.339
-outerInnerRingAreaRatio = 3.506 #Default is 3.506
-innerRingCircleAreaRatio = 13.019 #Default it 13.019
+outerRingAreaRatio = 1.745 #Default is [1.745, V4], [1.749, V5]
+innerRingAreaRatio = 1.339 #Default is [1.339, V4], [1.195, V5]
+outerInnerRingAreaRatio = 3.506 #Default is [3.506, V4], [7.539, V5]
+innerRingCircleAreaRatio = 13.019 #Default it [13.019, V4], [14.617, V5]
 
-ringAreaRatioInaccuracyThreshold = 0.025 #Default is 0.025
-centerPointLocationInaccuracyThreshold = 10.0 #In pixels (default is 30)
+ringAreaRatioInaccuracyThreshold = 0.020 #Default is [0.025, iphone res], [0.07, drone res @ low altitude], [0.15, drone res @ high altitude]
+centerPointLocationInaccuracyThreshold = 20.0 #In pixels (default is [20, iphone res], [10, drone res])
 
 #Other CV adjustments
-contourAreaMinimumThreshold = 1000 #Contour areas will be discarded if they contain less than the threshold number of pixels (default is 1000)
+contourAreaMinimumThreshold = 1000 #Contour areas will be discarded if they contain less than the threshold number of pixels (default is [1000, High Res], [100, Low Res])
 
+proceduralMode = True
 #########################################
 #			Helper Functions			#
 #########################################
@@ -159,7 +172,7 @@ def arePointsClose(x1, y1, x2, y2, maximumDistance):
 #########################################
 #			Primary Functions			#
 #########################################
-def main(imageName, createVisualOutput):
+def findPad(imageName, createVisualOutput):
 	start_time = time.time()
 	returnCode = -1
 	print "======================="
@@ -254,8 +267,9 @@ def main(imageName, createVisualOutput):
 		print("%s seconds" % (time.time() - start_time))
 		print "======================="
 		return returnCode, None, None, None
-		
+
 #########################################
 #				Procedural				#
 #########################################
-main(sys.argv[1], True)
+if proceduralMode :
+	findPad(sys.argv[1], sys.argv[2])

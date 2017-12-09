@@ -6,6 +6,7 @@ import numpy as np
 import cv2 as cv
 import sys
 import math
+import FindPad
 
 #########################################
 #				Variables				#
@@ -20,13 +21,15 @@ photoHeightFromOneMeter = 113.5
 altitude = 0.0 #cm
 
 #Image (not photo)
-areaOfLandingSquareInPixels = 0.0
+areaOfLandingSquareInPixelsAtBaseAltitudeCentimeters = 0.0
+baseAltitude = 0.0
+#areaOfLandingSquareInPixels = 0.0
 
 #########################################
 #			Helper Functions			#
 #########################################
 #Converts coordinates from a lop-left origin (aka photos) to a center origin
-def convertCoordinates(x, y):
+def convertCoordinates(x, y) :
 	centeredOriginPixelX = 0.0
 	centeredOriginPixelY = 0.0
 	centeredOriginPixelX = x - (photoWidth / 2)
@@ -42,27 +45,32 @@ def getLandingPadRelativePosition(x, y):
 	return landingPadRelativeX, landingPadRelativeY
 
 #Calculates the desired direction of travel (Drone is facing 0 radians, + is CCW)
-def getHeadingAdjustment(x, y):
+def getHeadingAdjustment(x, y) :
 	deltaTheta = math.atan2(y, x) - 1.57079632675
 	deltaTheta = deltaTheta * 180 / 3.1415926535 #Converts from radians to degrees
 	print "Adjust heading", deltaTheta, "degrees"
 	print "================================="
 	return deltaTheta
 
-def updateAltitude():
+def updateAltitude(areaOfLandingSquareInPixels) :
 	print "Updating altitude based on pad size"
-	
+	return math.abs(math.sqrt(areaOfLandingSquareInPixels) - math.sqrt(areaOfLandingSquareInPixelsAtBaseAltitudeCentimeters)) * baseAltitude
+
 
 #########################################
 #			Primary Functions			#
 #########################################
-def getCoordinatesOfCenterOfPad():
+def getCoordinatesOfCenterOfPad(topLeftPixelX, topLeftPixelY, areaOfLandingSquareInPixels) :
 	updateAltitude()
-	cx = 0
-	cy = 0
-	x, y = convertCoordinates(cx, cy);
+	centeredPixelX, centeredPixelY = convertCoordinates(topLeftPixelX, topLeftPixelY);
 	padX, padY = getLandingPadRelativePosition(x, y)
 	deltaTheta = getHeadingAdjustment(x, y)
 	return padX, padY, deltaTheta
 
-getCoordinatesOfCenterOfPad()
+def callFindPadThenGetCoordinatesOfCenterOfPad() :
+	FindPad.main("testingimages/padv4i5.jpg", True)
+
+#########################################
+#				Procedural				#
+#########################################
+callFindPadThenGetCoordinatesOfCenterOfPad()
