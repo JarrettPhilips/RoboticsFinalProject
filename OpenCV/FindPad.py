@@ -7,7 +7,7 @@
 	V4 is the new dark pad version (can be found on the repo). 
 	V5 is a failed experiment, but comments with it's values have been left in just in case. Just ignore them for now
 	
-	Calling: This Program can be called from either command line or just a function call.
+	Calling: This clearProgram can be called from either command line or just a function call.
 	Image name is a string of the directory of the image. If they are in the same directory, this is just the image name.
 	Please include the file type (e.g. ".jpg" or ".png")
 	The true or false value is just whether you want the program to generate a visual output of it's work.
@@ -15,7 +15,7 @@
 		Command line: >python2 FindPad.py Imagename.png True/False
 		Function call: findPad(imageName, True/False)
 
-	Returns: return code, X-Coord of first possible landing pad center, Y-Coord of first possible landing pad center, List of all possible landing pad centers
+	Returns: return code, X-Coord of first possible landing pad center, Y-Coord of first possible landing pad center, Area of first possible landing pad center, List of all possible landing pad centers, List of all possible landing pad areas
 	*All returned values are integers
 
 	Return Code Key
@@ -43,13 +43,14 @@ innerRingAreaRatio = 1.339 #Default is [1.339, V4], [1.195, V5]
 outerInnerRingAreaRatio = 3.506 #Default is [3.506, V4], [7.539, V5]
 innerRingCircleAreaRatio = 13.019 #Default it [13.019, V4], [14.617, V5]
 
-ringAreaRatioInaccuracyThreshold = 0.020 #Default is [0.025, iphone res], [0.07, drone res @ low altitude], [0.15, drone res @ high altitude]
-centerPointLocationInaccuracyThreshold = 20.0 #In pixels (default is [20, iphone res], [10, drone res])
+ringAreaRatioInaccuracyThreshold = 0.15 #Default is [0.025, iphone res], [0.07, drone res @ low altitude], [0.15, drone res @ high altitude]
+centerPointLocationInaccuracyThreshold = 10.0 #In pixels (default is [20, iphone res], [10, drone res])
 
 #Other CV adjustments
-contourAreaMinimumThreshold = 1000 #Contour areas will be discarded if they contain less than the threshold number of pixels (default is [1000, High Res], [100, Low Res])
+contourAreaMinimumThreshold = 250 #Contour areas will be discarded if they contain less than the threshold number of pixels (default is [1000, High Res], [100, Low Res])
 
-proceduralMode = True
+proceduralMode = False
+createVisualOutput = True
 #########################################
 #			Helper Functions			#
 #########################################
@@ -125,6 +126,7 @@ def searchForContourPairByAreaRatio(contourAreasSorted, contoursSorted, ratio, t
 
 def findAreasWithSharedCenter(outerRingListOfAreaPairs, outerRingListOfContourPairs, innerOuterRingListOfAreaPairs, innerOuterListOfContourPairs) :
 	commonCenterPoints = []
+	commonCenterPointsOuterAreas = []
 	padFound = False
 
 	for i in range(len(outerRingListOfContourPairs)) :
@@ -150,12 +152,13 @@ def findAreasWithSharedCenter(outerRingListOfAreaPairs, outerRingListOfContourPa
 						print "Center:", centerPoint
 						'''
 						commonCenterPoints.append(centerPoint)
+						commonCenterPointsOuterAreas.append(outerRingListOfAreaPairs[i])
 						padFound = True
 
 			j = j + 1
 		i = i + 1
 
-	return padFound, commonCenterPoints
+	return padFound, commonCenterPoints, commonCenterPointsOuterAreas
 
 def areAreasSimilar(area1, area2, ratio, threshold):
 	if (float(area1) / float(area2)) > (ratio - threshold) and (float(area1) / float(area2)) < (ratio + threshold) :
@@ -172,7 +175,7 @@ def arePointsClose(x1, y1, x2, y2, maximumDistance):
 #########################################
 #			Primary Functions			#
 #########################################
-def findPad(imageName, createVisualOutput):
+def findPad(imageName):
 	start_time = time.time()
 	returnCode = -1
 	print "======================="
@@ -201,7 +204,7 @@ def findPad(imageName, createVisualOutput):
 	'''
 
 	#Check for shared center point	
-	padFound, commonCenterPoints = findAreasWithSharedCenter(outerRingListOfAreaPairs, outerRingListOfContourPairs, innerOuterRingListOfAreaPairs, innerOuterListOfContourPairs)
+	padFound, commonCenterPoints, commonCenterPointsOuterAreas = findAreasWithSharedCenter(outerRingListOfAreaPairs, outerRingListOfContourPairs, innerOuterRingListOfAreaPairs, innerOuterListOfContourPairs)
 	if len(commonCenterPoints) > 1 :
 		returnCode = 11
 	
@@ -222,7 +225,7 @@ def findPad(imageName, createVisualOutput):
 		print len(outerRingListOfAreaPairs) * len(innerOuterRingListOfAreaPairs), "Total Combinations"
 		print "-----------------------"
 
-		secondaryPadFound, secondaryCommonCenterPoints = findAreasWithSharedCenter(innerRingListOfAreaPairs, innerRingListOfContourPairs, innerRingCircleListOfAreaPairs, innerRingCircleListOfContourPairs)
+		secondaryPadFound, secondaryCommonCenterPoints, secondaryCommonCenterPointsOuterAreas = findAreasWithSharedCenter(innerRingListOfAreaPairs, innerRingListOfContourPairs, innerRingCircleListOfAreaPairs, innerRingCircleListOfContourPairs)
 		if len(secondaryCommonCenterPoints) > 1 :
 			returnCode = 12
 
@@ -231,6 +234,7 @@ def findPad(imageName, createVisualOutput):
 			print secondaryCommonCenterPoints
 			padFound = True
 			commonCenterPoints = secondaryCommonCenterPoints
+			commonCenterPointsOuterAreas = secondaryCommonCenterPointsOuterAreas
 			returnCode = 2
 		else : #If false, return 0 and report no pad found
 			print "Secondary Pad Not Found. No Pad Identified"
@@ -242,7 +246,10 @@ def findPad(imageName, createVisualOutput):
 		image = cv.imread(imageName)
 		grayscaleImage = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
  		outputImage = cv.cvtColor(grayscaleImage, cv.COLOR_GRAY2BGR)
-		cv.drawContours(outputImage, contoursSorted, -1, (0,255,255), 4)
+		cv.drawContours(outputImage, contoursSorted, -1, (0, 255, 255), 4)
+		c = []
+		c.append(contoursSorted[1])
+		cv.drawContours(outputImage, c, -1, (255, 255, 0 ), 4)
 
 		for i in range(len(commonCenterPoints)) :
 			cv.line(outputImage, (0, commonCenterPoints[i][1]), (99999, commonCenterPoints[i][1]), (0, 225, 0), 5)
@@ -251,22 +258,28 @@ def findPad(imageName, createVisualOutput):
 
 		if padFound :
 			cv.circle(outputImage, (commonCenterPoints[0][0], commonCenterPoints[0][1]), 10, (0, 0, 255), -1)
+		
+		#Draw lines through center of image
+		imageHeight, imageWidth, channels = image.shape
+		cv.line(outputImage, (0, imageHeight / 2), (99999, imageHeight / 2), (255, 0, 255), 5)
+		cv.line(outputImage, (imageWidth / 2, 0), (imageWidth / 2, 99999), (255, 0, 255), 5)
+
 		cv.imwrite("Output.jpg", outputImage)
 		cv.waitKey(0)
 		cv.destroyAllWindows()
 	
 	if padFound :
-		print "Return:", returnCode, commonCenterPoints[0][0], commonCenterPoints[0][1], commonCenterPoints
+		print "Return:", returnCode, commonCenterPoints[0][0], commonCenterPoints[0][1], commonCenterPointsOuterAreas[0], commonCenterPoints, commonCenterPointsOuterAreas
 		print "== Runtime Completed =="
 		print("%s seconds" % (time.time() - start_time))
 		print "======================="
-		return returnCode, commonCenterPoints[0][0], commonCenterPoints[0][1], commonCenterPoints
+		return returnCode, commonCenterPoints[0][0], commonCenterPoints[0][1], commonCenterPointsOuterAreas[0], commonCenterPoints, commonCenterPointsOuterAreas
 	else : 
-		print "Return:", returnCode, None, None, None
+		print "Return:", returnCode, None, None, None, None, None
 		print "== Runtime Completed =="
 		print("%s seconds" % (time.time() - start_time))
 		print "======================="
-		return returnCode, None, None, None
+		return returnCode, None, None, None, None, None
 
 #########################################
 #				Procedural				#
