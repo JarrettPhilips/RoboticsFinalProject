@@ -20,23 +20,25 @@ Drone will work closely with the computer, using the better hardware to handle t
 Drone will take off, look down, and find the landing pad using OpenCV. It will analyze the path of the landing pad (as dictated by Sparki), and predict its next location. The drone will then navigate to that predicted location and land on the pad. 
 
 ## Plan For Next Month (11/1 - 12/13)
-[ ] Create Sparki Pad - Lead: Jarrett | Deadline: November 8th
+[X Create Sparki Pad - Lead: Jarrett | Deadline: November 8th
  [ ] Create Sparki path program (Random State Machine)
   [X] Variable Linear Path
   [X] Variable Circular Path
   [ ] Variable Sin Path
- [ ] Build physical pad to mount to Sparki
-  [ ] Pad will be colored bright green
-  [ ] Pad will have a center circle target colored bright red
- [ ] Make sure Sparki can carry the weight of the pad
+ [X] Build physical pad to mount to Sparki
+  REMOVED:
+          [ ] Pad will be colored bright green
+          [ ] Pad will have a center circle target colored bright red
+ The landing pad is now a black and white geometric design
+ [X] Make sure Sparki can carry the weight of the pad
  
 [X] Create Vision System - Lead: Anthony | Deadline: November 15th
  [X] Install OpenCV Python Package & Verify it works with drone camera
  [X] Write color threshold algorithm to locate pad
 
 [ ] Drone Basic Systems - Lead: Max | Deadline: November 29th (Spans Fall Break)
- [ ] Be able to take off
- [ ] Be able to land
+ [X] Be able to take off
+ [X] Be able to land
  [ ] Be able to travel in air
   [ ] Subsystems
   [ ] Odometry
@@ -48,9 +50,11 @@ Drone will take off, look down, and find the landing pad using OpenCV. It will a
 [ ] Land Drone on Static Pad - Lead: Jarrett | Deadline: December 6th 
  [ ] Combine CV and Drone Basic Systems
 
-[ ] Land Drone on Dynamic Pad - Lead: Anthony | Deadline: December 13th
- [ ] Be able to predict pad’s location
- [ ] Be able to adjust landing destination constantly
+REMOVED:
+      [ ] Land Drone on Dynamic Pad - Lead: Anthony | Deadline: December 13th
+       [ ] Be able to predict pad’s location
+       [ ] Be able to adjust landing destination constantly
+The feedback controller works faster than Sparki can move.
 
 ## Graceful Failure
 Things we can remove:
