@@ -1,2 +1,0 @@
-bebop_autonomy/bebop_autonomy:bebop_autonomy/bebop_description:bebop_autonomy/bebop_driver:bebop_autonomy/bebop_msgs:bebop_autonomy/bebop_tools
--DCATKIN_DEVEL_PREFIX=/home/user/Documents/drone/drone_project/drone_ws/devel -DCMAKE_INSTALL_PREFIX=/home/user/Documents/drone/drone_project/drone_ws/install -G Unix Makefiles

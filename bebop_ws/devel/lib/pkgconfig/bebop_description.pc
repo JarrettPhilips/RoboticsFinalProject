@@ -1,8 +1,0 @@
-prefix=/home/anthony/Documents/Final/bebop_ws/devel
-
-Name: bebop_description
-Description: Description of bebop_description
-Version: 0.7.0
-Cflags: 
-Libs: -L/home/anthony/Documents/Final/bebop_ws/devel/lib 
-Requires: 
